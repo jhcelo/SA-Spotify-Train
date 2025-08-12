@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Spotify App Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #121212;
+            color: white;
+            padding: 50px;
+        }
+        .login-button {
+            background-color: #1DB954; /* Spotify Green */
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: inline-block;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .login-button:hover {
+            background-color: #1ED760;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to My Spotify App!</h1>
+    <p>This application needs your permission to access your Spotify account.</p>
+    <button class="login-button" id="spotify-login-btn">
+        Log in with Spotify
+    </button>
+
+    <script>
+        document.getElementById('spotify-login-btn').addEventListener('click', function() {
+            // **CRITICAL: You will replace this placeholder later with your real GitHub Pages URL.**
+            const REDIRECT_URI = 'YOUR_GITHUB_PAGES_URL/callback.html'; 
+            
+            // **You will replace this with your actual Client ID.**
+            const CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID'; 
+
+            // Scopes define what your app can do. Replace with the ones you need.
+            const SCOPES = 'user-read-private user-read-email playlist-read-private';
+            
+            // For security, generate a random 'state' parameter.
+            function generateRandomString(length) {
+                let text = '';
+                const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                for (let i = 0; i < length; i++) {
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+                }
+                return text;
+            }
+            const state = generateRandomString(16);
+            localStorage.setItem('spotify_auth_state', state);
+
+            const authUrl = 'https://accounts.spotify.com/authorize?' +
+                'response_type=code' +
+                '&client_id=' + encodeURIComponent(CLIENT_ID) +
+                '&scope=' + encodeURIComponent(SCOPES) +
+                '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) +
+                '&state=' + encodeURIComponent(state);
+
+            window.location.href = authUrl;
+        });
+    </script>
+</body>
+</html>
