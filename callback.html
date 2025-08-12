@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify App Callback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #121212;
+            color: white;
+            padding: 50px;
+        }
+        h1 { color: #1DB954; }
+        p { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Processing Spotify Login...</h1>
+    <p id="status">Please wait while we process your authentication.</p>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+        const statusElement = document.getElementById('status');
+
+        if (error) {
+            statusElement.textContent = 'Spotify login failed: ' + error + '. Please check permissions and try again.';
+            console.error('Spotify Auth Error:', error);
+        } else if (code) {
+            const storedState = localStorage.getItem('spotify_auth_state');
+            if (state === null || state !== storedState) {
+                 statusElement.textContent = 'State mismatch. Potential security risk. Please try again.';
+                 console.error('State mismatch!');
+            } else {
+                statusElement.textContent = 'Successfully received authorization code!';
+                console.log('Authorization Code:', code);
+                console.log('State:', state);
+            }
+            localStorage.removeItem('spotify_auth_state');
+        } else {
+            statusElement.textContent = 'No authorization code or error received. Something unexpected happened.';
+        }
+    </script>
+</body>
+</html>
